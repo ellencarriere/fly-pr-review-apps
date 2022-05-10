@@ -54,6 +54,7 @@ if [ -n "$INPUT_POSTGRES" ]; then
   if ! flyctl status --app "$postgres_app"; then
     flyctl postgres create --name "$postgres_app" --region "$region" --organization "$org" --vm-size shared-cpu-1x --volume-size 1 --initial-cluster-size 1 || true
     flyctl postgres attach --app "$app" --postgres-app "$postgres_app" || true
+    flyctl deploy --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
   fi
 fi
 
