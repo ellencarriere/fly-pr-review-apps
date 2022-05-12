@@ -37,12 +37,13 @@ if [ "$EVENT_TYPE" = "closed" ]; then
   if [ -n "$INPUT_POSTGRES" ]; then
     flyctl apps destroy "$postgres_app" -y || true
   fi
+
+  message="Review app destroyed." 
   exit 0
 fi
 
 # Create postgres app if it does not already exist
 if [ -n "$INPUT_POSTGRES" ]; then
-  echo "Creating postgres app: $postgres_app"
   if ! flyctl status --app "$postgres_app"; then
     flyctl postgres create --name "$postgres_app" --region "$region" --organization "$org" --vm-size shared-cpu-1x --volume-size 1 --initial-cluster-size 1 || true
   fi
@@ -50,20 +51,17 @@ fi
 
 # Deploy the Fly app, creating it first if needed.
 if ! flyctl status --app "$app"; then
-  echo "$app does not exist. Creating..."
   flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
   if [ -n "$INPUT_SECRETS" ]; then
-    echo "Inputting secrets."
     echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
   fi
-  echo "Attach database."
   flyctl postgres attach --app "$app" --postgres-app "$postgres_app"
-  echo "Deploy app"
   # Using detach so the github action does not monitor deployment the whole time
   flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
+  message="Review app created."
 elif [ "$INPUT_UPDATE" != "false" ]; then
-  echo "Updating app..."
   flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
+  message="Review app updated."
 fi
 
 
@@ -74,3 +72,4 @@ appid=$(jq -r .ID status.json)
 echo "::set-output name=hostname::$hostname"
 echo "::set-output name=url::https://$hostname"
 echo "::set-output name=id::$appid"
+echo "::set-output name=message::$message"
