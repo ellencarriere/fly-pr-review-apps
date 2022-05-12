@@ -39,6 +39,7 @@ if [ "$EVENT_TYPE" = "closed" ]; then
   fi
 
   message="Review app destroyed." 
+  echo "::set-output name=message::$message"
   exit 0
 fi
 
@@ -72,4 +73,4 @@ appid=$(jq -r .ID status.json)
 echo "::set-output name=hostname::$hostname"
 echo "::set-output name=url::https://$hostname"
 echo "::set-output name=id::$appid"
-echo "::set-output name=message::$message"
+echo "::set-output name=message::$message https://$hostname"
