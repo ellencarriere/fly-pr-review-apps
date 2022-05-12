@@ -57,10 +57,11 @@ if ! flyctl status --app "$app"; then
   echo "Attach database."
   flyctl postgres attach --app "$app" --postgres-app "$postgres_app"
   echo "Deploy app"
-  flyctl deploy --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
+  # Using detach so the github action does not monitor deployment the whole time
+  flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
 elif [ "$INPUT_UPDATE" != "false" ]; then
   echo "Updating app..."
-  flyctl deploy --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
+  flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
 fi
 
 
