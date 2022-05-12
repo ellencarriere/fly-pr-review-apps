@@ -40,6 +40,7 @@ fi
 
 # Create postgres app if it does not already exist
 if [ -n "$INPUT_POSTGRES" ]; then
+  echo "Creating postgres app: $postgres_app"
   if ! flyctl status --app "$postgres_app"; then
     flyctl postgres create --name "$postgres_app" --region "$region" --organization "$org" --vm-size shared-cpu-1x --volume-size 1 --initial-cluster-size 1 || true
   fi
@@ -47,13 +48,18 @@ fi
 
 # Deploy the Fly app, creating it first if needed.
 if ! flyctl status --app "$app"; then
-  flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
+  echo "$app does not exist. Creating..."
+  flyctl launch --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
   if [ -n "$INPUT_SECRETS" ]; then
+    echo "Inputting secrets."
     echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
   fi
-  flyctl postgres attach --app "$app" --postgres-app "$postgres_app" || true
+  echo "Attach database."
+  flyctl postgres attach --app "$app" --postgres-app "$postgres_app"
+  echo "Deploy app"
   flyctl deploy --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
 elif [ "$INPUT_UPDATE" != "false" ]; then
+  echo "Updating app..."
   flyctl deploy --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
 fi
 
