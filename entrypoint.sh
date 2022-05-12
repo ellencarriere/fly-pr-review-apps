@@ -38,7 +38,7 @@ if [ "$EVENT_TYPE" = "closed" ]; then
     flyctl apps destroy "$postgres_app" -y || true
   fi
 
-  message="Review app destroyed." 
+  message="Review app deleted." 
   echo "::set-output name=message::$message"
   exit 0
 fi
