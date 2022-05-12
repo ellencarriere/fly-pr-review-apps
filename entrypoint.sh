@@ -60,7 +60,7 @@ if ! flyctl status --app "$app"; then
   # Using detach so the github action does not monitor deployment the whole time
   flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
   message="Review app created."
-elif [ "$INPUT_UPDATE" != "false" ]; then
+elif [ "$EVENT_TYPE" = "push" ]; then
   flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
   message="Review app updated."
 fi
