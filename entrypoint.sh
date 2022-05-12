@@ -49,7 +49,7 @@ fi
 # Deploy the Fly app, creating it first if needed.
 if ! flyctl status --app "$app"; then
   echo "$app does not exist. Creating..."
-  flyctl launch --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
+  flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --region "$region" --org "$org"
   if [ -n "$INPUT_SECRETS" ]; then
     echo "Inputting secrets."
     echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
