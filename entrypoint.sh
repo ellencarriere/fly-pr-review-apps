@@ -14,11 +14,11 @@ if [ -z "$PR_NUMBER" ]; then
 fi
 
 REPO_OWNER=$(jq -r .event.base.repo.owner /github/workflow/event.json)
-REPO_NAME=$(jq -r .event.base.repo.name /github/workflow/event.json)
+REPO_NAME=$(jq -r .repository.name /github/workflow/event.json)
 EVENT_TYPE=$(jq -r .action /github/workflow/event.json)
 
 # Default the Fly app name to pr-{number}-{repo_owner}-{repo_name}
-app="${INPUT_NAME:-pr-$PR_NUMBER}"
+app="${INPUT_NAME:-$REPO_NAME-pr-$PR_NUMBER}"
 postgres_app="${INPUT_POSTGRES_NAME:-pr-$PR_NUMBER-postgres}"
 region="${INPUT_REGION:-${FLY_REGION:-ord}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
