@@ -61,8 +61,8 @@ if ! flyctl status --app "$app"; then
   flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
   message="Review app created."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
-  flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
   message="Review app updated."
+  flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
 fi
 
 
