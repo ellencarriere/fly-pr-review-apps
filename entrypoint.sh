@@ -59,9 +59,9 @@ if ! flyctl status --app "$app"; then
   flyctl postgres attach --app "$app" --postgres-app "$postgres_app"
   # Using detach so the github action does not monitor deployment the whole time
   flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
-  message="Review app created."
+  message="Review app created. It may take a few minutes for the app to deploy."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
-  message="Review app updated."
+  message="Review app updated. It may take a few minutes for your changes to be deployed."
   flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
 fi
 
