@@ -20,7 +20,7 @@ EVENT_TYPE=$(jq -r .action /github/workflow/event.json)
 # Default the Fly app name to pr-{number}-{repo_owner}-{repo_name}
 app="${INPUT_NAME:-pr-$PR_NUMBER}"
 postgres_app="${INPUT_POSTGRES_NAME:-pr-$PR_NUMBER-postgres}"
-region="${INPUT_REGION:-${FLY_REGION:-iad}}"
+region="${INPUT_REGION:-${FLY_REGION:-ord}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
 
