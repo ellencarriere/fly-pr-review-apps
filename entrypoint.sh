@@ -17,9 +17,10 @@ REPO_OWNER=$(jq -r .event.base.repo.owner /github/workflow/event.json)
 REPO_NAME=$(jq -r .repository.name /github/workflow/event.json)
 EVENT_TYPE=$(jq -r .action /github/workflow/event.json)
 
-# Default the Fly app name to pr-{number}-{repo_owner}-{repo_name}
+# Default the Fly app name to {repo_name}-pr-{pr_number}
 app="${INPUT_NAME:-$REPO_NAME-pr-$PR_NUMBER}"
-postgres_app="${INPUT_POSTGRES_NAME:-pr-$PR_NUMBER-postgres}"
+# # Default the Fly app name to {repo_name}-pr-{pr_number}-postgres
+postgres_app="${INPUT_POSTGRES_NAME:-REPO_NAME-pr-$PR_NUMBER-postgres}"
 region="${INPUT_REGION:-${FLY_REGION:-ord}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
@@ -31,7 +32,7 @@ fi
 
 echo $EVENT_TYPE
 
-# PR was closed - remove the Fly app if one exists and exit.
+# If PR is closed or merged, the app and its associated DB will be deleted
 if [ "$EVENT_TYPE" = "closed" ]; then
   flyctl apps destroy "$app" -y || true
   if [ -n "$INPUT_POSTGRES" ]; then
@@ -59,10 +60,10 @@ if ! flyctl status --app "$app"; then
   flyctl postgres attach --app "$app" --postgres-app "$postgres_app"
   # Using detach so the github action does not monitor deployment the whole time
   flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
-  outputmessage="Review app created. It may take a few minutes for the app to deploy."
+  statusmessage="Review app created. It may take a few minutes for the app to deploy."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
   flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
-  outputmessage="Review app updated. It may take a few minutes for your changes to be deployed."
+  statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 
 
@@ -73,4 +74,4 @@ appid=$(jq -r .ID status.json)
 echo "::set-output name=hostname::$hostname"
 echo "::set-output name=url::https://$hostname"
 echo "::set-output name=id::$appid"
-echo "::set-output name=message::$outputmessage https://$hostname"
+echo "::set-output name=message::$statusmessage https://$hostname"
