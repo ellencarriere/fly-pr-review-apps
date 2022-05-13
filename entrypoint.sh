@@ -13,7 +13,6 @@ if [ -z "$PR_NUMBER" ]; then
   exit 1
 fi
 
-REPO_OWNER=$(jq -r .event.base.repo.owner /github/workflow/event.json)
 REPO_NAME=$(jq -r .repository.name /github/workflow/event.json)
 EVENT_TYPE=$(jq -r .action /github/workflow/event.json)
 
@@ -29,8 +28,6 @@ if ! echo "$app" | grep "$PR_NUMBER"; then
   echo "For safety, this action requires the app's name to contain the PR number."
   exit 1
 fi
-
-echo $EVENT_TYPE
 
 # If PR is closed or merged, the app and its associated DB will be deleted
 if [ "$EVENT_TYPE" = "closed" ]; then
