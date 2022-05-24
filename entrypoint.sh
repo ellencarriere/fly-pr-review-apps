@@ -64,9 +64,14 @@ elif [ "$EVENT_TYPE" = "synchronize" ]; then
   statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 
+echo "INPUT MEM"
 echo "$INPUT_MEMORY"
 
+echo "MEM"
+echo "$memory"
+
 if [ -n "$INPUT_MEMORY" ]; then
+  echo "INSIDE"
   echo "$memory"
 fi
 
