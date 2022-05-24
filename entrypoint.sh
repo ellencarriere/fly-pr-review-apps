@@ -25,6 +25,9 @@ org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
 memory="${INPUT_MEMORY}"
 
+echo "MEM1"
+echo "$memory"
+
 if ! echo "$app" | grep "$PR_NUMBER"; then
   echo "For safety, this action requires the app's name to contain the PR number."
   exit 1
