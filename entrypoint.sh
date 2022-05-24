@@ -25,9 +25,6 @@ org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
 memory="$INPUT_MEMORY"
 
-echo "MEM1"
-echo "$memory"
-
 if ! echo "$app" | grep "$PR_NUMBER"; then
   echo "For safety, this action requires the app's name to contain the PR number."
   exit 1
@@ -67,15 +64,8 @@ elif [ "$EVENT_TYPE" = "synchronize" ]; then
   statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 
-echo "INPUT MEM"
-echo "$INPUT_MEMORY"
-
-echo "MEM"
-echo "$memory"
-
 if [ -n "$INPUT_MEMORY" ]; then
-  echo "INSIDE"
-  echo "$memory"
+  flyctl scale memory "$memory" --app "$app"
 fi
 
 # Make some info available to the GitHub workflow.
