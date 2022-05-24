@@ -25,3 +25,5 @@ inputs:
     default: true
   secrets:
     description: Secrets to be set on the app. Values are read as `name=value`
+  memory: 
+    decsription: Optionally allows users to scale the memory for their app.
