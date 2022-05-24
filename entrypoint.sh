@@ -65,7 +65,8 @@ elif [ "$EVENT_TYPE" = "synchronize" ]; then
 fi
 
 if [ -n "$INPUT_MEMORY" ]; then
-  yes | flyctl scale memory "$memory" --app "$app"
+  flyctl scale memory "$memory" --app "$app"
+  yes
 fi
 
 # Make some info available to the GitHub workflow.
