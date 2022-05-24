@@ -23,6 +23,7 @@ postgres_app="${INPUT_POSTGRES:-$REPO_NAME-pr-$PR_NUMBER-postgres}"
 region="${INPUT_REGION:-${FLY_REGION:-ord}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
+memory="$INPUT_MEMORY"
 
 if ! echo "$app" | grep "$PR_NUMBER"; then
   echo "For safety, this action requires the app's name to contain the PR number."
@@ -63,6 +64,11 @@ elif [ "$EVENT_TYPE" = "synchronize" ]; then
   statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 
+echo "$INPUT_MEMORY"
+
+if [ -n "$INPUT_MEMORY" ]; then
+  echo "$memory"
+fi
 
 # Make some info available to the GitHub workflow.
 fly status --app "$app" --json >status.json
