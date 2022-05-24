@@ -23,7 +23,7 @@ postgres_app="${INPUT_POSTGRES:-$REPO_NAME-pr-$PR_NUMBER-postgres}"
 region="${INPUT_REGION:-${FLY_REGION:-ord}}"
 org="${INPUT_ORG:-${FLY_ORG:-personal}}"
 image="$INPUT_IMAGE"
-memory="$MEMORY"
+memory="$INPUT_MEMORY"
 
 echo "MEM1"
 echo "$memory"
