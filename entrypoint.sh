@@ -26,6 +26,14 @@ image="$INPUT_IMAGE"
 dockerfile="$INPUT_DOCKERFILE"
 memory="$INPUT_MEMORY"
 
+# only wait for the deploy to complete if the user has requested the wait option
+# otherwise detach so the GitHub action doesn't run as long
+if [ "$INPUT_WAIT" = "true" ]; then
+  detach=""
+else
+  detach="--detach"
+fi
+
 if ! echo "$app" | grep "$PR_NUMBER"; then
   echo "For safety, this action requires the app's name to contain the PR number."
   exit 1
@@ -57,11 +65,10 @@ if ! flyctl status --app "$app"; then
     echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
   fi
   flyctl postgres attach --app "$app" --postgres-app "$postgres_app"
-  # Using detach so the github action does not monitor deployment the whole time
-  flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
+  flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate
   statusmessage="Review app created. It may take a few minutes for the app to deploy."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
-  flyctl deploy --detach --app "$app" --region "$region" --image "$image" --region "$region" --strategy immediate
+  flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate
   statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 

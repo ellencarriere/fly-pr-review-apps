@@ -9,23 +9,32 @@ runs:
   image: "Dockerfile"
 inputs:
   name:
-    description: Fly app name
+    description: Fly app name (defaults to {repo_name}-pr-{pr_number})
+    required: false
   image:
     description: Optional pre-existing Docker image to use
+    required: false
   dockerfile:
     description: Optional path to a Dockerfile use for building the image
+    required: false
   region:
-    description: Region to launch the app in (alternatively, set the env FLY_REGION)
+    description: Region to launch the app in (defaults to ord. alternatively, set the env FLY_REGION)
+    required: false
   org:
-    description: Organization to launch the app in (alternatively, set the env FLY_ORG)
+    description: Organization to launch the app in (defaults to personal. alternatively, set the env FLY_ORG)
+    required: false
   path:
     description: path to a directory containing a fly.toml to clone
+    required: false
   postgres:
-    description: Optionally attach the app to a pre-existing Postgres cluster on Fly
-  update:
-    description: Whether new commits to the PR should re-deploy the Fly app
-    default: true
+    description: Optionally create a new Postgres cluster for the app
+    required: false
   secrets:
     description: Secrets to be set on the app. Values are read as `name=value`
+    required: false
   memory: 
-    decsription: Optionally allows users to scale the memory for their app.
+    description: Optionally allows users to scale the memory for their app.
+    required: false
+  wait:
+    description: Pass 'true' to wait for the full deploy to complete before exiting the GitHub action.
+    required: false
