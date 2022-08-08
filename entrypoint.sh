@@ -54,7 +54,7 @@ fi
 # Create postgres app if it does not already exist
 if [ -n "$INPUT_POSTGRES" ]; then
   if ! flyctl status --app "$postgres_app"; then
-    flyctl postgres create --name "$postgres_app" --region "$region" --organization "$org" --vm-size shared-cpu-1x --volume-size 1 --initial-cluster-size 1 || true
+    flyctl postgres create --name "$postgres_app" --region "$region" --org "$org" --vm-size shared-cpu-1x --volume-size 1 --initial-cluster-size 1 || true
   fi
 fi
 
