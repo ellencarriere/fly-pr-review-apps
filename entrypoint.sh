@@ -46,7 +46,7 @@ if [ "$EVENT_TYPE" = "closed" ]; then
     flyctl apps destroy "$postgres_app" -y || true
   fi
 
-  message="Review app deleted." 
+  message="Review app deleted."
   echo "::set-output name=message::$message"
   exit 0
 fi
@@ -64,7 +64,7 @@ if ! flyctl status --app "$app"; then
   if [ -n "$INPUT_SECRETS" ]; then
     echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
   fi
-  flyctl postgres attach --app "$app" --postgres-app "$postgres_app"
+  flyctl postgres attach "$postgres_app" --app "$app"
   flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate
   statusmessage="Review app created. It may take a few minutes for the app to deploy."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
