@@ -17,6 +17,9 @@ If you have an existing `fly.toml` in your repo, this action will copy it with a
 | `postgres` | Optional name of an existing Postgres cluster to `flyctl postgres attach` to.                                                                                                                            |
 | `update`   | Whether or not to update this Fly app when the PR is updated. Default `true`.                                                                                                                            |
 | `secrets`  | Optional addition of secrets to be pulled from your repository action secrets. Needs to be formatted as key=value
+| `wait`     | Pass 'true' to wait for the full deploy to complete before exiting the GitHub action. |
+| `flyctl_version`     | Specify the version of the flyctl command-line tool to use |
+
 ## Required Secrets
 
 `FLY_API_TOKEN` - **Required**. The token to use for authentication. You can find a token by running `flyctl auth token` or going to your [user settings on fly.io](https://fly.io/user/personal_access_tokens).

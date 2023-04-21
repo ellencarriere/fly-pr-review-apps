@@ -13,6 +13,13 @@ if [ -z "$PR_NUMBER" ]; then
   exit 1
 fi
 
+# install the fly CLI tool
+flyctl_version="${INPUT_FLYCTL_VERSION:-latest}"
+curl -LJO https://fly.io/install.sh \
+  && chmod +x install.sh \
+  && FLYCTL_INSTALL=/usr/local ./install.sh $flyctl_version
+flyctl version
+
 REPO_NAME=$(jq -r .repository.name /github/workflow/event.json)
 EVENT_TYPE=$(jq -r .action /github/workflow/event.json)
 
