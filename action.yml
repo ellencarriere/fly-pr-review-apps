@@ -32,9 +32,12 @@ inputs:
   secrets:
     description: Secrets to be set on the app. Values are read as `name=value`
     required: false
-  memory: 
+  memory:
     description: Optionally allows users to scale the memory for their app.
     required: false
   wait:
     description: Pass 'true' to wait for the full deploy to complete before exiting the GitHub action.
+    required: false
+  flyctl_version:
+    description: Specify the version of the flyctl command-line tool to use
     required: false
