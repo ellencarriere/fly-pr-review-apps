@@ -73,8 +73,7 @@ if ! flyctl status --app "$app"; then
   fi
   flyctl postgres attach "$postgres_app" --app "$app"
   flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate
-
-  flyctl machine list --app "$app" --json | jq -r '.[].id' | while IFS= read -r id; do flyctl machine update --memory 512 "$id" --app "$app"; done
+  flyctl scale vm shared-cpu-2x --app "$app"
 
   statusmessage="Review app created. It may take a few minutes for the app to deploy."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
