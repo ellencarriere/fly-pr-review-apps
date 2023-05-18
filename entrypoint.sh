@@ -79,9 +79,6 @@ elif [ "$EVENT_TYPE" = "synchronize" ]; then
   statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 
-if [ -n "$INPUT_MEMORY" ]; then
-  flyctl scale memory "$memory" --app "$app"
-fi
 
 # Make some info available to the GitHub workflow.
 fly status --app "$app" --json >status.json
