@@ -73,6 +73,7 @@ if ! flyctl status --app "$app"; then
   fi
   flyctl postgres attach "$postgres_app" --app "$app"
   flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate
+  sleep 10
   flyctl scale vm shared-cpu-2x --app "$app" --group app
 
   statusmessage="Review app created. It may take a few minutes for the app to deploy."
