@@ -84,6 +84,14 @@ fi
 fly status --app "$app" --json >status.json
 hostname=$(jq -r .Hostname status.json)
 appid=$(jq -r .ID status.json)
+
+fly machine list -a "$app" --json >machines.json
+
+jq -r '.[].id' machines.json | while IFS= read -r id; do
+    echo "Machine ID: $id"
+    flyctl machine update $id --app $app
+done
+
 echo "::set-output name=hostname::$hostname"
 echo "::set-output name=url::https://$hostname"
 echo "::set-output name=id::$appid"
