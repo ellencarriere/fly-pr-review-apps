@@ -73,20 +73,21 @@ if ! flyctl status --app "$app"; then
   fi
   flyctl postgres attach "$postgres_app" --app "$app"
   flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate
+  sleep 10
+  flyctl scale vm shared-cpu-2x --app "$app" --group app
+
   statusmessage="Review app created. It may take a few minutes for the app to deploy."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
   flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate
   statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 
-if [ -n "$INPUT_MEMORY" ]; then
-  flyctl scale memory "$memory" --app "$app"
-fi
 
 # Make some info available to the GitHub workflow.
 fly status --app "$app" --json >status.json
 hostname=$(jq -r .Hostname status.json)
 appid=$(jq -r .ID status.json)
+
 echo "::set-output name=hostname::$hostname"
 echo "::set-output name=url::https://$hostname"
 echo "::set-output name=id::$appid"
