@@ -72,7 +72,7 @@ if ! flyctl status --app "$app"; then
     echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
   fi
   flyctl postgres attach "$postgres_app" --app "$app"
-  flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate
+  flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240
   sleep 10
   flyctl scale vm shared-cpu-2x --app "$app" --group app
 
