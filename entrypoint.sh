@@ -78,7 +78,7 @@ if ! flyctl status --app "$app"; then
 
   statusmessage="Review app created. It may take a few minutes for the app to deploy."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
-  flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate
+  flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240
   statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 
