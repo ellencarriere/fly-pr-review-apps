@@ -66,7 +66,7 @@ if [ -n "$INPUT_POSTGRES" ]; then
 fi
 
 # Build secrets
-$build_secrets = ""
+$build_secrets=""
 if [ -n "$INPUT_BUILD_SECRETS" ]; then
   $build_secrets=""
   $secrets_list=($INPUT_BUILD_SECRETS)
