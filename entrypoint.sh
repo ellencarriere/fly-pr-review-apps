@@ -65,6 +65,16 @@ if [ -n "$INPUT_POSTGRES" ]; then
   fi
 fi
 
+# Build secrets
+$build_secrets = ""
+if [ -n "$INPUT_BUILD_SECRETS" ]; then
+  $build_secrets=""
+  $secrets_list=($INPUT_BUILD_SECRETS)
+  for secret in ${secrets_list[@]}; do
+    $build_secrets+="--build-secret $secret "
+  done
+fi
+
 # Deploy the Fly app, creating it first if needed.
 if ! flyctl status --app "$app"; then
   flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --dockerfile "$dockerfile" --region "$region" --org "$org"
@@ -72,11 +82,11 @@ if ! flyctl status --app "$app"; then
     echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
   fi
   flyctl postgres attach "$postgres_app" --app "$app"
-  flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory 512
+  flyctl deploy $build_secrets $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory 512
 
   statusmessage="Review app created. It may take a few minutes for the app to deploy."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
-  flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory 512
+  flyctl deploy $build_secrets $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory 512
   statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 

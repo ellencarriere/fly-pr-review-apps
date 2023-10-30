@@ -30,7 +30,7 @@ inputs:
     description: Optionally create a new Postgres cluster for the app
     required: false
   secrets:
-    description: Secrets to be set on the app. Values are read as `name=value`
+    description: Secrets to be set on the app. Values are read as `name=value`. Multiple values should be delineated by spaces or on separate lines.
     required: false
   memory:
     description: Optionally allows users to scale the memory for their app.
@@ -40,4 +40,7 @@ inputs:
     required: false
   flyctl_version:
     description: Specify the version of the flyctl command-line tool to use
+    required: false
+  build_secrets:
+    description: Secrets to be set at build time. Values are read as `name=value`. Multiple values should be delineated by spaces or on separate lines.
     required: false
