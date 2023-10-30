@@ -74,7 +74,7 @@ if [ -n "$INPUT_BUILD_SECRETS" ]; then
     build_secrets+="--build-secret $secret "
   done
 fi
-
+echo $build_secrets
 # Deploy the Fly app, creating it first if needed.
 if ! flyctl status --app "$app"; then
   flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --dockerfile "$dockerfile" --region "$region" --org "$org"
