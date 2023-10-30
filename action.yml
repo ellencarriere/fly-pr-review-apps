@@ -41,3 +41,9 @@ inputs:
   flyctl_version:
     description: Specify the version of the flyctl command-line tool to use
     required: false
+  oban_key_fingerprint:
+    description: The fingerprint of the Oban key to use for the app (required at build time)
+    required: false
+  oban_license_key:
+    description: The Oban license key to use for the app (required at build time)
+    required: false

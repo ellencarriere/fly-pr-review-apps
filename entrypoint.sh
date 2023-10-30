@@ -65,6 +65,12 @@ if [ -n "$INPUT_POSTGRES" ]; then
   fi
 fi
 
+if [ -n "$INPUT_OBAN_KEY_FINGERPRINT" && -n "$INPUT_OBAN_LICENSE_KEY" ]; then
+  $build_secrets = "--build-secret OBAN_KEY_FINGERPRINT=$INPUT_OBAN_KEY_FINGERPRINT --build-secret OBAN_LICENSE_KEY=$INPUT_OBAN_LICENSE_KEY"
+else
+  $build_secrets = ""
+fi
+
 # Deploy the Fly app, creating it first if needed.
 if ! flyctl status --app "$app"; then
   flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --dockerfile "$dockerfile" --region "$region" --org "$org"
@@ -72,11 +78,11 @@ if ! flyctl status --app "$app"; then
     echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
   fi
   flyctl postgres attach "$postgres_app" --app "$app"
-  flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory 512
+  flyctl deploy $build_secrets $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory 512
 
   statusmessage="Review app created. It may take a few minutes for the app to deploy."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
-  flyctl deploy $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory 512
+  flyctl deploy $build_secrets $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory 512
   statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 
