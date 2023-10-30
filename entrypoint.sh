@@ -68,7 +68,7 @@ fi
 # Build secrets
 build_secrets=""
 if [ -n "$INPUT_BUILD_SECRETS" ]; then
-  secrets_list=($INPUT_BUILD_SECRETS)
+  IFS=' ' read -a secrets_list <<< "$INPUT_BUILD_SECRETS"
   for secret in ${secrets_list[@]}; do
     build_secrets+="--build-secret $secret "
   done
