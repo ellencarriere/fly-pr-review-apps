@@ -65,10 +65,14 @@ if [ -n "$INPUT_POSTGRES" ]; then
   fi
 fi
 
-if [ -n "$INPUT_OBAN_KEY_FINGERPRINT" && -n "$INPUT_OBAN_LICENSE_KEY" ]; then
-  $build_secrets = "--build-secret OBAN_KEY_FINGERPRINT=$INPUT_OBAN_KEY_FINGERPRINT --build-secret OBAN_LICENSE_KEY=$INPUT_OBAN_LICENSE_KEY"
-else
-  $build_secrets = ""
+# Build secrets
+$build_secrets = ""
+if [ -n "$INPUT_BUILD_SECRETS" ]; then
+  $build_secrets=""
+  $secrets_list=($INPUT_BUILD_SECRETS)
+  for secret in ${secrets_list[@]}; do
+    $build_secrets+="--build-secret $secret "
+  done
 fi
 
 # Deploy the Fly app, creating it first if needed.
