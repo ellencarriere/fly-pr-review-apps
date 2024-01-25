@@ -33,7 +33,18 @@ fi
 # PR was closed - remove the Fly app if one exists and exit.
 if [ "$EVENT_TYPE" = "closed" ]; then
   flyctl apps destroy "$app" -y || true
+  if [ -n "$INPUT_POSTGRES" && "$INPUT_POSTGRES_STANDALONE" = "true" ]; then
+    flyctl apps destroy "$INPUT_POSTGRES" -y || true
+  fi
   exit 0
+fi
+
+# Create postgres app if necessary
+# TODO: do we want the postgres app specs to be configurable?
+if [ -n "$INPUT_POSTGRES" && "$INPUT_POSTGRES_STANDALONE" = "true" ]; then
+  if ! flyctl status --app "$INPUT_POSTGRES"; then
+    flyctl postgres create --name "$INPUT_POSTGRES" --region "$region" --org "$org" --vm-size shared-cpu-1x --volume-size 1 --initial-cluster-size 1 || true
+  fi
 fi
 
 # Deploy the Fly app, creating it first if needed.

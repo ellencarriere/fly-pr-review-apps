@@ -16,7 +16,8 @@ If you have an existing `fly.toml` in your repo, this action will copy it with a
 | `region`   | Which Fly region to run the app in. Alternatively, set the env `FLY_REGION`. Defaults to `iad`.                                                                                                          |
 | `org`      | Which Fly organization to launch the app under. Alternatively, set the env `FLY_ORG`. Defaults to `personal`.                                                                                            |
 | `path`     | Path to run the `flyctl` commands from. Useful if you have an existing `fly.toml` in a subdirectory.                                                                                                     |
-| `postgres` | Optional name of an existing Postgres cluster to `flyctl postgres attach` to.                                                                                                                            |
+| `postgres` | Optional name of a new or existing Postgres cluster to `flyctl postgres attach` to.                                                                                                                            |
+| `postgres_standalone` | If "true", the Postgres cluster specified by `postgres` will be created as necessary and deleted during teardown. |
 | `update`   | Whether or not to update this Fly app when the PR is updated. Default `true`.                                                                                                                            |
 | `secrets`  | Secrets to be set on the app. Separate multiple secrets with a space                                                                                                                                     |
 | `vmsize`   | Set app VM to a named size, eg. shared-cpu-1x, dedicated-cpu-1x, dedicated-cpu-2x etc. Takes precedence over cpu, cpu kind, and memory inputs.                                                           |
