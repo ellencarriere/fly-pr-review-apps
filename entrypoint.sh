@@ -61,7 +61,7 @@ fi
 # Create postgres app if it does not already exist
 if [ -n "$INPUT_POSTGRES" ]; then
   if ! flyctl status --app "$postgres_app"; then
-    flyctl postgres create --name "$postgres_app" --region "$region" --org "$org" --vm-size shared-cpu-1x --volume-size 1 --initial-cluster-size 1 || true
+    flyctl postgres create --name "$postgres_app" --regions "$region" --org "$org" --vm-memory "$memory" --vm-size shared-cpu-1x --volume-size 1 --initial-cluster-size 1 || true
   fi
 fi
 
@@ -77,16 +77,16 @@ fi
 echo $build_secrets
 # Deploy the Fly app, creating it first if needed.
 if ! flyctl status --app "$app"; then
-  flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --dockerfile "$dockerfile" --region "$region" --org "$org"
+  flyctl launch --no-deploy --copy-config --name "$app" --image "$image" --dockerfile "$dockerfile" --regions "$region" --org "$org"
   if [ -n "$INPUT_SECRETS" ]; then
     echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
   fi
   flyctl postgres attach "$postgres_app" --app "$app"
-  flyctl deploy $build_secrets $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory 512
+  flyctl deploy $build_secrets $detach --app "$app" --regions "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory "$memory"
 
   statusmessage="Review app created. It may take a few minutes for the app to deploy."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
-  flyctl deploy $build_secrets $detach --app "$app" --region "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory 512
+  flyctl deploy $build_secrets $detach --app "$app" --regions "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory "$memory"
   statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 
