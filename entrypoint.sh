@@ -82,11 +82,11 @@ if ! flyctl status --app "$app"; then
     echo $INPUT_SECRETS | tr " " "\n" | flyctl secrets import --app "$app"
   fi
   flyctl postgres attach "$postgres_app" --app "$app"
-  flyctl deploy $build_secrets $detach --app "$app" --regions "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory "$memory"
+  flyctl deploy $build_secrets $detach --app "$app" --regions "$region" --image "$image" --strategy immediate --wait-timeout "6m0s" --vm-memory "$memory" --release-command-timeout "6m0s"
 
   statusmessage="Review app created. It may take a few minutes for the app to deploy."
 elif [ "$EVENT_TYPE" = "synchronize" ]; then
-  flyctl deploy $build_secrets $detach --app "$app" --regions "$region" --image "$image" --strategy immediate --wait-timeout 240 --vm-memory "$memory"
+  flyctl deploy $build_secrets $detach --app "$app" --regions "$region" --image "$image" --strategy immediate --wait-timeout "6m0s" --vm-memory "$memory" --release-command-timeout "6m0s"
   statusmessage="Review app updated. It may take a few minutes for your changes to be deployed."
 fi
 
